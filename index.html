@@ -2,15 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LazyATC Web</title>
+  <title>DEL Assistant (Static)</title>
   <style>
     :root {
       --bg: #f4f6f8;
-      --card: #fff;
+      --card: #ffffff;
       --primary: #0057d9;
-      --text: #333;
+      --text: #333333;
+      --input-bg: #ffffff;
       --radius: 8px;
       --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark {
+      --bg: #1e1e1e;
+      --card: #2a2a2a;
+      --primary: #66aaff;
+      --text: #f0f0f0;
+      --input-bg: #3a3a3a;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
     body {
@@ -20,6 +30,7 @@
       padding: 40px;
       display: flex;
       justify-content: center;
+      transition: background 0.3s, color 0.3s;
     }
 
     .container {
@@ -29,6 +40,7 @@
       box-shadow: var(--shadow);
       max-width: 600px;
       width: 100%;
+      position: relative;
     }
 
     h2 {
@@ -48,6 +60,8 @@
       margin-top: 5px;
       border-radius: var(--radius);
       border: 1px solid #ccc;
+      background: var(--input-bg);
+      color: var(--text);
       font-size: 14px;
       box-sizing: border-box;
     }
@@ -75,6 +89,10 @@
       background: #0042a3;
     }
 
+    body.dark button:hover {
+      background: #5591e0;
+    }
+
     #route-list {
       height: 100px;
     }
@@ -90,15 +108,29 @@
       margin-bottom: 20px;
     }
 
-    .copy-btn {
-      margin-top: 10px;
-      background: #444;
+    .toggle-dark {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 14px;
+      background: none;
+      border: 1px solid var(--primary);
+      padding: 5px 10px;
+      border-radius: var(--radius);
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .toggle-dark:hover {
+      background: var(--primary);
+      color: white;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>LazyATC Web</h2>
+    <button class="toggle-dark" onclick="toggleDarkMode()">🌙 Toggle Dark</button>
+    <h2>DEL Assistant (Static Version)</h2>
 
     <div class="radio-group">
       <label>
@@ -133,12 +165,11 @@
       </label>
     </div>
 
-    <button onclick="generateMessage()">Generate Message</button>
+    <button onclick="generateAndCopy()">✈️ Generate & 📋 Copy Message</button>
 
     <label>Generated Message:
       <textarea id="output" readonly></textarea>
     </label>
-    <button class="copy-btn" onclick="copyMessage()">📋 Copy to Clipboard</button>
   </div>
 
   <script>
@@ -183,7 +214,7 @@
       }
     }
 
-    function generateMessage() {
+    function generateAndCopy() {
       const mode = document.querySelector('input[name="mode"]:checked').value;
       let message = "";
 
@@ -209,17 +240,24 @@
                     .replace("{fl2}", fl2);
       }
 
-      document.getElementById("output").value = message;
-    }
-
-    function copyMessage() {
       const output = document.getElementById("output");
+      output.value = message;
       output.select();
       document.execCommand("copy");
-      alert("Copied to clipboard!");
+      alert("Message generated and copied!");
     }
 
-    updateMode(); // On load
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark") ? "true" : "false");
+    }
+
+    // Load saved theme
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark");
+    }
+
+    updateMode();
   </script>
 </body>
 </html>
