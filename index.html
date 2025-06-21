@@ -40,12 +40,17 @@
       box-shadow: var(--shadow);
       max-width: 600px;
       width: 100%;
-      position: relative;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
     h2 {
-      margin-top: 0;
-      text-align: center;
+      margin: 0;
       color: var(--primary);
     }
 
@@ -109,9 +114,6 @@
     }
 
     .toggle-dark {
-      position: absolute;
-      top: 20px;
-      right: 20px;
       font-size: 14px;
       background: none;
       border: 1px solid var(--primary);
@@ -119,6 +121,7 @@
       border-radius: var(--radius);
       color: var(--primary);
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     .toggle-dark:hover {
@@ -129,8 +132,10 @@
 </head>
 <body>
   <div class="container">
-    <button class="toggle-dark" onclick="toggleDarkMode()">🌙 Toggle Dark</button>
-    <h2>DEL Assistant (Static Version)</h2>
+    <div class="header">
+      <h2>DEL Assistant (Static Version)</h2>
+      <button class="toggle-dark" onclick="toggleDarkMode()">🌙</button>
+    </div>
 
     <div class="radio-group">
       <label>
@@ -177,10 +182,6 @@
       "Invalid Route": "Hi, your planned route seems to be invalid. Can you accept amended routing via {route}?",
       "Non-Standard Altitude": "Hi, your altitude is non-standard. I can offer you either {fl1} or {fl2}."
     };
-
-    document.querySelectorAll('input[name="mode"]').forEach(r => {
-      r.addEventListener("change", updateMode);
-    });
 
     function updateMode() {
       const mode = document.querySelector('input[name="mode"]:checked').value;
@@ -257,7 +258,46 @@
       document.body.classList.add("dark");
     }
 
+    // Enter key shortcuts
+    document.getElementById("dept").addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("dest").focus();
+      }
+    });
+
+    document.getElementById("dest").addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        fetchRoutes();
+      }
+    });
+
+    document.getElementById("route-list").addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        generateAndCopy();
+      }
+    });
+
+    document.getElementById("override").addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        generateAndCopy();
+      }
+    });
+
+    document.getElementById("filed-fl").addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        generateAndCopy();
+      }
+    });
+
     updateMode();
+    document.querySelectorAll('input[name="mode"]').forEach(r => {
+      r.addEventListener("change", updateMode);
+    });
   </script>
 </body>
 </html>
